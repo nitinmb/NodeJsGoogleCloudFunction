@@ -8,7 +8,7 @@ steps:
     - beta
     - functions
     - deploy
-    - helloWorld-prod
+    - helloWorld
     - --source=.
     - --runtime=nodejs8
     - --trigger-http
