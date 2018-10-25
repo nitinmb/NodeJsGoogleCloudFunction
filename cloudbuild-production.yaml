@@ -1,0 +1,14 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'gs://220513-buildartifacts/node-package-latest.tar.gz', '.']
+  - name: 'debian'
+    args: ['tar', '-xzf', 'node-package-latest.tar.gz']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+    - beta
+    - functions
+    - deploy
+    - helloWorld-prod
+    - --source=.
+    - --runtime=nodejs8
+    - --trigger-http

@@ -1,0 +1,20 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['test']
+  - name: 'debian'
+    args: ['tar', '--exclude=README.md', '--exclude=.git' , '-exclude=.gitignore' , '--exclude=*.yaml' , '-zcvf' , 'node-package-$SHORT_SHA.tar.gz' ,  '.' ]
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'node-package-$SHORT_SHA.tar.gz', 'gs://220513-buildartifacts/node-package-$SHORT_SHA.tar.gz']
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'node-package-$SHORT_SHA.tar.gz', 'gs://220513-buildartifacts/node-package-latest.tar.gz']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+    - beta
+    - functions
+    - deploy
+    - helloWorld-dev
+    - --source=.
+    - --runtime=nodejs8
+    - --trigger-http
